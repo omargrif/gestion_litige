@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Conception - Voiture Solaire Autonome</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .image-modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(3px);
+      animation: fadeIn 0.3s ease-in;
+    }
+    
+    .image-modal.active {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .image-modal-content {
+      position: relative;
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      max-width: 90vw;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      animation: slideUp 0.3s ease-out;
+    }
+    
+    .image-modal-content img {
+      max-width: 100%;
+      max-height: 80vh;
+      object-fit: contain;
+      border-radius: 8px;
+    }
+    
+    .image-modal-close {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 32px;
+      font-weight: bold;
+      color: #666;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: all 0.2s ease;
+    }
+    
+    .image-modal-close:hover {
+      color: #000;
+      background-color: rgba(0, 0, 0, 0.1);
+      transform: scale(1.1);
+    }
+    
+    .clickable-image {
+      cursor: zoom-in;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    
+    .clickable-image:hover {
+      transform: scale(1.02);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+    }
+    
+    .static-image {
+      cursor: default !important;
+    }
+    
+    .static-image:hover {
+      transform: none !important;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+    }
+    
+    .image-wrapper {
+      position: relative;
+      display: inline-block;
+      width: 100%;
+    }
+    
+    .zoom-button {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: rgba(0, 0, 0, 0.6);
+      border: none;
+      color: white;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      transition: all 0.2s ease;
+      z-index: 10;
+    }
+    
+    .zoom-button:hover {
+      background: rgba(0, 0, 0, 0.8);
+      transform: scale(1.1);
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    @keyframes slideUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container nav">
+      <a href="index.html#accueil" class="logo-link">
+        <img src="WhatsApp_Image_2025-12-16_at_19.40.06-removebg-preview.png" alt="Auto" class="logo-img" />
+      </a>
+      <nav class="menu">
+        <a href="index.html#accueil">Accueil</a>
+        <a href="index.html#equipe">Equipe</a>
+        <a href="index.html#contact">Contact</a>
+        <a href="index.html#fonctionnalite">Fonctionnalité</a>
+      </nav>
+      <a class="btn" href="index.html#contact">Contact</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h2>Phase de Conception</h2>
+          <p class="muted">Modélisation 3D, simulation et optimisation technique</p>
+        </div>
+        
+        <div class="feature-rows">
+          <article class="feature-row">
+            <div class="feature-text">
+              <h3>Modélisation CAO & Structure</h3>
+              <p>
+                La structure mécanique a été modélisée en détail à l'aide de SolidWorks. Le châssis tubulaire a été optimisé pour garantir une rigidité maximale avec un poids minimal.
+              </p>
+              <ul class="feature-list">
+                <li>Châssis en treillis de tubes soudés</li>
+                <li>Matériaux : Acier renforcé (haute résistance)</li>
+                <li>Analyse FEA pour validation structurelle</li>
+                <li>Facteur de sécurité : 2.5x sur les points critiques</li>
+                <li>Rapport rigidité/masse optimisé</li>
+                <li>Assemblage modulaire pour fabrication</li>
+              </ul>
+            </div>
+            <div class="image-card" style="display: flex; flex-direction: column; gap: 16px;">
+              <img src="image%20copy%2035.png" alt="CAO Structure - Vue principale" style="width: 100%; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);" />
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <img src="image%20copy%2034.png" alt="CAO Structure - Vue détail" style="width: 100%; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);" />
+                <img src="image%20copy%2033.png" alt="CAO Structure - Vue latérale" style="width: 100%; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);" />
+              </div>
+            </div>
+          </article>
+
+          <article class="feature-row reverse">
+            <div class="feature-text">
+              <h3>Répartition des Masses & Aérodynamisme</h3>
+              <p>
+                Une analyse détaillée de la répartition des masses a été effectuée pour optimiser l'équilibre du véhicule. Le centre de gravité a été positionné au point optimal pour la stabilité.
+              </p>
+              <p>
+                L'aérodynamisme a été affiné pour réduire la traînée et améliorer l'efficacité énergétique. Des simulations CFD ont validé la performance aérodynamique.
+              </p>
+              <ul class="feature-list">
+                <li>Masse totale estimée : 460 kg (dont 80 kg pour la batterie)</li>
+                <li>Répartition avant/arrière : 45% / 55%</li>
+                <li>Centre de gravité : 35 cm du sol</li>
+                <li>Coefficient de traînée (Cx) : 0.28</li>
+                <li>Surface frontale : 2.1 m²</li>
+                <li>Simulation CFD validée</li>
+              </ul>
+            </div>
+            <div class="image-card">
+              <div class="image-wrapper">
+                <img src="image%20copy%2028.png" alt="Répartition des masses" style="width: 100%; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);" />
+                <button class="zoom-button" onclick="openImageModal('image%20copy%2028.png')">🔍</button>
+              </div>
+            </div>
+          </article>
+
+          <article class="feature-row">
+            <div class="feature-text">
+              <h3>Intégration des Systèmes Mécaniques</h3>
+              <p>
+                Les quatre systèmes mécaniques clés (direction, suspension, freinage, propulsion) ont été intégrés et validés. Chaque système a été testé individuellement avant l'intégration finale.
+              </p>
+              <ul class="feature-list">
+                <li><strong>Direction :</strong> Ackermann avec y = 0.258m optimal</li>
+                <li><strong>Suspension :</strong> Double triangle avec débattement de 150mm</li>
+                <li><strong>Freinage :</strong> Système hydraulique dimensionné pour arrêt d'urgence</li>
+                <li><strong>Propulsion :</strong> Réduction 15:1 pour couple maximal</li>
+                <li>Tests de cinématique et dynamique</li>
+                <li>Validation en conditions réelles simulées</li>
+              </ul>
+            </div>
+            <div class="image-card">
+              <img src="image%20copy%2029.png" alt="Suspension et systèmes mécaniques" class="static-image" style="width: 100%; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);" />
+            </div>
+          </article>
+
+          <article class="feature-row reverse">
+            <div class="feature-text">
+              <h3>Conception des Systèmes Électriques & Électroniques</h3>
+              <p>
+                L'architecture électrique a été dimensionnée autour d'une batterie 48V. Tous les circuits ont été protégés et la gestion thermique a été optimisée.
+              </p>
+              <p>
+                Le système de contrôle embarqué gère la distribution d'énergie, la propulsion, le freinage et l'autonomie. Une architecture modulaire permet la maintenance et l'évolution.
+              </p>
+              <ul class="feature-list">
+                <li><strong>Batterie :</strong> 48V Lithium-ion (15 kWh)</li>
+                <li><strong>Moteur :</strong> 1.2 kW avec BEC intégré</li>
+                <li><strong>Servomoteurs :</strong> Direction (180°) + freinage</li>
+                <li><strong>Capteurs :</strong> LIDAR, Caméra, IMU, encodeurs</li>
+                <li><strong>Contrôleur :</strong> Microcontrôleur embarqué</li>
+                <li><strong>Protection :</strong> Fusibles, relais thermiques, limite de courant</li>
+              </ul>
+            </div>
+            <div class="image-card">
+              <div class="image-wrapper">
+                <img src="image%20copy%2036.png" alt="Schéma synoptique électronique" style="width: 100%; max-width: 600px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);" />
+                <button class="zoom-button" onclick="openImageModal('image%20copy%2036.png')">🔍</button>
+              </div>
+            </div>
+          </article>
+
+          <article class="feature-row">
+            <div class="feature-text">
+              <h3>Intégration des Panneaux Solaires</h3>
+              <p>
+                Les panneaux solaires ont été intégrés au toit du véhicule pour maximiser la surface de captation tout en maintenant l'aérodynamisme. Un système de régulation MPPT optimise la charge de la batterie.
+              </p>
+              <ul class="feature-list">
+                <li><strong>Surface totale :</strong> ~4 m² de panneaux</li>
+                <li><strong>Puissance crête :</strong> 600W en conditions optimales</li>
+                <li><strong>Type :</strong> Monocristallin haute efficacité (22%)</li>
+                <li><strong>Intégration :</strong> Sur le toit et pare-brise</li>
+                <li><strong>Contrôleur MPPT :</strong> Suivi du point de puissance max</li>
+                <li><strong>Production estimée :</strong> 800Wh/jour en conditions normales</li>
+              </ul>
+            </div>
+            <div class="image-card">
+              <div class="image-wrapper">
+                <img src="image%20copy%2031.png" alt="Système énergétique et panneaux solaires" style="width: 100%; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);" />
+                <button class="zoom-button" onclick="openImageModal('image%20copy%2031.png')">🔍</button>
+              </div>
+            </div>
+          </article>
+
+          <article class="feature-row reverse">
+            <div class="feature-text">
+              <h3>Système d'Autonomie & Intelligence Artificielle</h3>
+              <p>
+                Le système d'autonomie repose sur une fusion multi-capteurs. Une caméra détecte les marquages au sol, un LIDAR cartographie l'environnement, et une IA embarquée prend les décisions en temps réel.
+              </p>
+              <ul class="feature-list">
+                <li><strong>Caméra :</strong> 1280x720 @ 30fps avec traitement Canny</li>
+                <li><strong>LIDAR :</strong> 2D détection d'obstacles (10m de portée)</li>
+                <li><strong>Algorithmes :</strong> Canny + Hough pour lignes</li>
+                <li><strong>Lissage :</strong> θ = 0.7θ_prev + 0.3θ_new</li>
+                <li><strong>Fréquence de contrôle :</strong> 30 Hz (temps réel)</li>
+                <li><strong>Latence :</strong> &lt; 50ms pour réactivité</li>
+              </ul>
+            </div>
+            <div class="image-card">
+              <img src="image%20copy%2032.png" alt="Système LIDAR et autonomie" class="static-image" style="width: 100%; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);" />
+            </div>
+          </article>
+        </div>
+
+        <div style="background: var(--soft); padding: 24px; border-radius: 12px; margin-top: 32px; display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <h3 style="margin-bottom: 16px;">✅ Résultats de la Conception</h3>
+            <p>
+              <strong>Logiciels utilisés :</strong> SolidWorks, MATLAB, Python<br>
+              <strong>Modèles validés :</strong> Structure (FEA), Aérodynamisme (CFD), Électrique (SPICE)<br>
+              <strong>Itérations :</strong> 8 cycles d'optimisation et d'améliorations
+            </p>
+          </div>
+          <a class="btn primary" href="index.html#accueil" style="white-space: nowrap; margin-left: 20px;">← Retour à l'accueil</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">© 2026 Copyright by IK Developers. All rights reserved.</div>
+  </footer>
+
+  <!-- Modal de zoom d'image -->
+  <div id="imageModal" class="image-modal">
+    <div class="image-modal-content">
+      <button class="image-modal-close" onclick="closeImageModal()">&times;</button>
+      <img id="modalImage" src="" alt="Zoom" />
+    </div>
+  </div>
+
+  <script>
+    function openImageModal(imageSrc) {
+      const modal = document.getElementById('imageModal');
+      const img = document.getElementById('modalImage');
+      img.src = imageSrc;
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    
+    function closeImageModal() {
+      const modal = document.getElementById('imageModal');
+      modal.classList.remove('active');
+      document.body.style.overflow = 'auto';
+    }
+    
+    // Fermer la modal en cliquant en dehors de l'image
+    document.getElementById('imageModal').addEventListener('click', function(event) {
+      if (event.target === this) {
+        closeImageModal();
+      }
+    });
+    
+    // Fermer avec la touche Échap
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') {
+        closeImageModal();
+      }
+    });
+  </script>

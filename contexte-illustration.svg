@@ -1,0 +1,131 @@
+<svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="sunGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffd700;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ffed4e;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="purpleBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6d4bf4;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3b6df5;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="carGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4f46e5;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2563eb;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="500" fill="#f7f6fb"/>
+
+  <!-- Sun rays in background -->
+  <g opacity="0.1">
+    <line x1="400" y1="50" x2="400" y2="10" stroke="#ffd700" stroke-width="3"/>
+    <line x1="450" y1="70" x2="475" y2="45" stroke="#ffd700" stroke-width="3"/>
+    <line x1="480" y1="120" x2="510" y2="120" stroke="#ffd700" stroke-width="3"/>
+    <line x1="350" y1="70" x2="325" y2="45" stroke="#ffd700" stroke-width="3"/>
+    <line x1="320" y1="120" x2="290" y2="120" stroke="#ffd700" stroke-width="3"/>
+  </g>
+
+  <!-- Sun circle -->
+  <circle cx="400" cy="80" r="35" fill="url(#sunGradient)"/>
+  <circle cx="400" cy="80" r="32" fill="none" stroke="#ffd700" stroke-width="1" opacity="0.4"/>
+
+  <!-- Solar energy beams from sun -->
+  <g stroke="url(#sunGradient)" stroke-width="2" opacity="0.3" stroke-linecap="round">
+    <path d="M 280 250 Q 300 150 400 80" fill="none"/>
+    <path d="M 520 250 Q 500 150 400 80" fill="none"/>
+    <path d="M 250 350 Q 300 200 400 80" fill="none"/>
+    <path d="M 550 350 Q 500 200 400 80" fill="none"/>
+  </g>
+
+  <!-- Car body (modern, sleek) -->
+  <g>
+    <!-- Car main body -->
+    <ellipse cx="400" cy="310" rx="85" ry="35" fill="url(#carGradient)"/>
+    <!-- Car top -->
+    <path d="M 340 310 Q 340 270 360 255 L 440 255 Q 460 270 460 310" fill="url(#purpleBlue)"/>
+    <!-- Windows -->
+    <ellipse cx="370" cy="280" rx="15" ry="18" fill="#e0e7ff" opacity="0.6"/>
+    <ellipse cx="430" cy="280" rx="15" ry="18" fill="#e0e7ff" opacity="0.6"/>
+  </g>
+
+  <!-- Solar panels on car (stylized) -->
+  <g fill="none" stroke="#ffd700" stroke-width="2" opacity="0.8">
+    <rect x="340" y="275" width="50" height="8" rx="2"/>
+    <line x1="345" y1="275" x2="345" y2="283"/>
+    <line x1="355" y1="275" x2="355" y2="283"/>
+    <line x1="365" y1="275" x2="365" y2="283"/>
+    <line x1="375" y1="275" x2="375" y2="283"/>
+    <line x1="385" y1="275" x2="385" y2="283"/>
+  </g>
+
+  <!-- Wheels -->
+  <circle cx="330" cy="345" r="12" fill="#1f2430"/>
+  <circle cx="330" cy="345" r="8" fill="#4f46e5" opacity="0.3"/>
+  <circle cx="470" cy="345" r="12" fill="#1f2430"/>
+  <circle cx="470" cy="345" r="8" fill="#4f46e5" opacity="0.3"/>
+
+  <!-- Team members (stylized circles representing people) -->
+  <!-- Left team -->
+  <g>
+    <!-- Person 1 - far left -->
+    <circle cx="150" cy="280" r="20" fill="#6d4bf4" opacity="0.7"/>
+    <circle cx="150" cy="260" r="12" fill="#6d4bf4"/>
+    <!-- Person 2 - left -->
+    <circle cx="220" cy="300" r="20" fill="#3b6df5" opacity="0.7"/>
+    <circle cx="220" cy="280" r="12" fill="#3b6df5"/>
+  </g>
+
+  <!-- Right team -->
+  <g>
+    <!-- Person 3 - right -->
+    <circle cx="580" cy="300" r="20" fill="#3b6df5" opacity="0.7"/>
+    <circle cx="580" cy="280" r="12" fill="#3b6df5"/>
+    <!-- Person 4 - far right -->
+    <circle cx="650" cy="280" r="20" fill="#6d4bf4" opacity="0.7"/>
+    <circle cx="650" cy="260" r="12" fill="#6d4bf4"/>
+  </g>
+
+  <!-- Top team members (looking down at project) -->
+  <g>
+    <circle cx="250" cy="200" r="18" fill="#6d4bf4" opacity="0.6"/>
+    <circle cx="250" cy="184" r="10" fill="#6d4bf4"/>
+    
+    <circle cx="400" cy="160" r="18" fill="#3b6df5" opacity="0.6"/>
+    <circle cx="400" cy="144" r="10" fill="#3b6df5"/>
+    
+    <circle cx="550" cy="200" r="18" fill="#6d4bf4" opacity="0.6"/>
+    <circle cx="550" cy="184" r="10" fill="#6d4bf4"/>
+  </g>
+
+  <!-- Connection lines showing collaboration -->
+  <g stroke="url(#purpleBlue)" stroke-width="2" opacity="0.3" fill="none" stroke-dasharray="4,4">
+    <line x1="150" y1="280" x2="340" y2="310"/>
+    <line x1="220" y1="300" x2="350" y2="320"/>
+    <line x1="400" y1="160" x2="400" y2="255"/>
+    <line x1="550" y1="200" x2="450" y2="310"/>
+    <line x1="580" y1="300" x2="460" y2="320"/>
+  </g>
+
+  <!-- Energy flow indicators -->
+  <g fill="none" stroke="#ffd700" stroke-width="1.5" opacity="0.5">
+    <circle cx="400" cy="310" r="95" stroke-dasharray="5,3"/>
+    <circle cx="400" cy="310" r="110" stroke-dasharray="5,3"/>
+  </g>
+
+  <!-- Decorative elements - gears/tech -->
+  <g stroke="#6d4bf4" stroke-width="2" fill="none" opacity="0.4">
+    <circle cx="120" cy="420" r="18"/>
+    <line x1="120" y1="402" x2="120" y2="438"/>
+    <line x1="102" y1="420" x2="138" y2="420"/>
+    
+    <circle cx="680" cy="420" r="18"/>
+    <line x1="680" y1="402" x2="680" y2="438"/>
+    <line x1="662" y1="420" x2="698" y2="420"/>
+  </g>
+
+  <!-- Text overlay -->
+  <text x="400" y="475" font-family="Inter, sans-serif" font-size="16" font-weight="600" text-anchor="middle" fill="#6d4bf4">
+    13 Étudiants • 1 Vision • Énergie Solaire
+  </text>
+</svg>

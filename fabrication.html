@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fabrication - Voiture Solaire Autonome</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .image-modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(3px);
+      animation: fadeIn 0.3s ease-in;
+    }
+    
+    .image-modal.active {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .image-modal-content {
+      position: relative;
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      max-width: 90vw;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      animation: slideUp 0.3s ease-out;
+    }
+    
+    .image-modal-content img {
+      max-width: 100%;
+      max-height: 80vh;
+      object-fit: contain;
+      border-radius: 8px;
+    }
+    
+    .image-modal-close {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 32px;
+      font-weight: bold;
+      color: #666;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: all 0.2s ease;
+    }
+    
+    .image-modal-close:hover {
+      color: #000;
+      background-color: rgba(0, 0, 0, 0.1);
+      transform: scale(1.1);
+    }
+    
+    .clickable-image {
+      cursor: zoom-in;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    
+    .clickable-image:hover {
+      transform: scale(1.02);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+    }
+
+    .specs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin: 24px 0;
+    }
+
+    .spec-card {
+      background: var(--soft);
+      padding: 16px;
+      border-radius: 12px;
+      border-left: 4px solid var(--primary);
+    }
+
+    .spec-card strong {
+      color: var(--primary);
+      display: block;
+      margin-bottom: 6px;
+      font-size: 14px;
+    }
+
+    .spec-card span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .feature-row.reverse .image-col {
+      order: -1;
+    }
+
+    .image-col {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    @keyframes slideUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container nav">
+      <a href="index.html#accueil" class="logo-link">
+        <img src="WhatsApp_Image_2025-12-16_at_19.40.06-removebg-preview.png" alt="Auto" class="logo-img" />
+      </a>
+      <nav class="menu">
+        <a href="index.html#accueil">Accueil</a>
+        <a href="index.html#equipe">Equipe</a>
+        <a href="index.html#contact">Contact</a>
+        <a href="index.html#fonctionnalite">Fonctionnalité</a>
+      </nav>
+      <a class="btn" href="index.html#contact">Contact</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h2>Phase de Fabrication</h2>
+          <p class="muted">Du prototype électrique à la mise en service - Une plateforme autonome à 20 km/h</p>
+        </div>
+
+        <div class="feature-rows">
+          <!-- Introduction -->
+          <article class="feature-row">
+            <div class="feature-text">
+              <h3>Introduction</h3>
+              <p>
+                Le projet de véhicule autonome franchit une étape majeure avec la mise en service de notre prototype électrique. Délaissant temporairement l'aspect solaire pour se concentrer sur la dynamique et l'intelligence embarquée, nous avons réussi à produire une plateforme capable d'atteindre <strong>20 km/h en toute autonomie</strong>.
+              </p>
+              <p style="margin-top: 12px;">
+                Cette phase critique valide l'intégration de tous les systèmes : structure, propulsion, électronique et contrôle logiciel.
+              </p>
+            </div>
+            <div class="image-card clickable-image">
+              <img src="WhatsApp%20Image%202026-04-24%20at%2016.25.32.jpeg" alt="Composants et moteurs assemblés" onclick="openImageModal(this.src)" style="width: 100%; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);" />
+            </div>
+          </article>
+
+          <!-- Section 1: Conception et Soudure -->
+          <article class="feature-row reverse">
+            <div class="feature-text">
+              <h3>Conception et Soudure de la Structure</h3>
+              <p>
+                La première phase a consisté à transformer les plans CAO en une structure physique. Sous la direction d'Ahmed, le châssis tubulaire a été assemblé et soudé pour offrir une <strong>rigidité maximale</strong>.
+              </p>
+              <p style="margin-top: 12px;">
+                Ce squelette métallique est conçu pour :
+              </p>
+              <ul class="feature-list">
+                <li>Absorber les vibrations à haute vitesse</li>
+                <li>Protéger les composants sensibles</li>
+                <li>Assurer la sécurité structurelle</li>
+                <li>Supporter le poids total du système</li>
+              </ul>
+            </div>
+            <div class="image-card clickable-image">
+              <img src="WhatsApp%20Image%202026-04-24%20at%2015.11.24.jpeg" alt="Châssis tubulaire soudé" onclick="openImageModal(this.src)" style="width: 100%; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);" />
+            </div>
+          </article>
+
+          <!-- Section 2: Chaîne de Traction -->
+          <article class="feature-row">
+            <div class="feature-text">
+              <h3>Chaîne de Traction et Alimentation</h3>
+              <p>
+                Le système repose sur un pack de batteries haute capacité alimentant un moteur électrique à haut rendement. Ali a supervisé l'intégration de l'essieu motorisé et le câblage de la puissance.
+              </p>
+              <p style="margin-top: 12px;">
+                Ce choix technique permet d'obtenir :
+              </p>
+              <ul class="feature-list">
+                <li>Une courbe d'accélération fluide et prévisible</li>
+                <li>Une vitesse de croisière stable de 20 km/h</li>
+                <li>Conditions idéales pour les tests de navigation</li>
+                <li>Rendement énergétique optimisé</li>
+              </ul>
+            </div>
+            <div class="image-card clickable-image">
+              <img src="WhatsApp%20Image%202026-04-24%20at%2015.19.54.jpeg" alt="Moteur et roue jaune" onclick="openImageModal(this.src)" style="width: 100%; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);" />
+            </div>
+          </article>
+
+          <!-- Section 3: Intelligence et Navigation -->
+          <article class="feature-row reverse">
+            <div class="feature-text">
+              <h3>Asservissement et Intelligence de Navigation</h3>
+              <p>
+                L'intelligence du véhicule réside dans son unité de contrôle. Grâce au travail de Rayane et Mohamed sur l'asservissement des moteurs, la voiture répond avec <strong>précision aux commandes logicielles</strong>.
+              </p>
+              <p style="margin-top: 12px;">
+                L'intégration de capteurs de proximité permet désormais au véhicule de scanner son environnement en temps réel.
+              </p>
+
+              <div class="specs-grid" style="margin-top: 18px;">
+                <div class="spec-card">
+                  <strong>Vitesse de pointe</strong>
+                  <span>20 km/h (bridage de sécurité)</span>
+                </div>
+                <div class="spec-card">
+                  <strong>Sécurité active</strong>
+                  <span>Détection automatique et freinage d'urgence</span>
+                </div>
+              </div>
+            </div>
+            <div class="image-col">
+              <div class="image-card clickable-image">
+                <img src="WhatsApp%20Image%202026-04-24%20at%2015.11.24%20(1).jpeg" alt="Équipe autour du véhicule" onclick="openImageModal(this.src)" style="width: 100%; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);" />
+              </div>
+              <div class="image-card clickable-image">
+                <img src="WhatsApp%20Image%202026-04-24%20at%2015.19.54%20(1).jpeg" alt="Capteur et encodeur" onclick="openImageModal(this.src)" style="width: 100%; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);" />
+              </div>
+            </div>
+          </article>
+
+          <!-- Section 4: Tests et Perspectives -->
+          <article class="feature-row">
+            <div class="feature-text">
+              <h3>Tests de Sécurité et Perspectives</h3>
+              <p>
+                Les essais sur piste ont validé la robustesse de l'algorithme de détection. Anas a veillé à ce que les protocoles de sécurité <strong>stoppent net le véhicule</strong> en cas d'imprévu sur la trajectoire.
+              </p>
+              <p style="margin-top: 12px;">
+                Nous disposons maintenant d'une base roulante fiable pour tester nos futurs algorithmes de navigation complexe sous <strong>ROS 2</strong>.
+              </p>
+              <ul class="feature-list">
+                <li>Validation des algorithmes de détection</li>
+                <li>Tests de freinage d'urgence</li>
+                <li>Stabilité en conditions réelles</li>
+                <li>Préparation pour navigation autonome avancée</li>
+              </ul>
+            </div>
+            <div class="image-card clickable-image">
+              <img src="WhatsApp%20Image%202026-04-24%20at%2016.25.32.jpeg" alt="Système complet assemblé" onclick="openImageModal(this.src)" style="width: 100%; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);" />
+            </div>
+          </article>
+
+          <!-- Simulateur Interactif -->
+          <article style="grid-column: 1 / -1; background: var(--soft); padding: 32px; border-radius: 16px; margin-top: 24px;">
+            <h3 style="margin-bottom: 16px;">Simulateur de Sécurité : Vitesse vs Détection</h3>
+            <p style="margin-bottom: 20px; color: var(--muted);">
+              Pour aider les visiteurs du site à comprendre l'importance de l'asservissement et du temps de réaction des capteurs, ce module interactif permet de visualiser la distance d'arrêt nécessaire à 20 km/h en fonction de la distance de détection paramétrée.
+            </p>
+            <div style="background: white; padding: 24px; border-radius: 12px; text-align: center; color: var(--muted); border: 2px dashed var(--border);">
+              <p>Module interactif en cours de développement</p>
+              <p style="font-size: 12px; margin-top: 8px;">Visualisation des calculs de freinage et détection de proximité</p>
+            </div>
+          </article>
+        </div>
+
+        <div style="background: var(--soft); padding: 24px; border-radius: 12px; margin-top: 32px; display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <h3 style="margin-bottom: 16px;">Résultats de Fabrication</h3>
+            <p>
+              <strong>Prototype fonctionnel :</strong> 20 km/h autonome | <strong>Systèmes intégrés :</strong> 6 pôles techniques
+            </p>
+            <p style="margin-top: 8px;">
+              <strong>Capteurs actifs :</strong> Détection et Encodeurs | <strong>Prochaine étape :</strong> Tests ROS 2 avancés
+            </p>
+          </div>
+          <a class="btn primary" href="index.html#accueil" style="white-space: nowrap; margin-left: 20px;">Retour à l'accueil</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">© 2026 Copyright by IK Developers. All rights reserved.</div>
+  </footer>
+
+  <!-- Modal de zoom d'image -->
+  <div id="imageModal" class="image-modal">
+    <div class="image-modal-content">
+      <button class="image-modal-close" onclick="closeImageModal()">&times;</button>
+      <img id="modalImage" src="" alt="Zoom" />
+    </div>
+  </div>
+
+  <script>
+    function openImageModal(imageSrc) {
+      const modal = document.getElementById('imageModal');
+      const img = document.getElementById('modalImage');
+      img.src = imageSrc;
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    
+    function closeImageModal() {
+      const modal = document.getElementById('imageModal');
+      modal.classList.remove('active');
+      document.body.style.overflow = 'auto';
+    }
+    
+    document.getElementById('imageModal').addEventListener('click', function(event) {
+      if (event.target === this) {
+        closeImageModal();
+      }
+    });
+    
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') {
+        closeImageModal();
+      }
+    });
+  </script>
+</body>
+</html>
