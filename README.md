@@ -1,50 +1,52 @@
-# Voiture Solaire Autonome
+# 🤖 Gestion des litiges — Workflow n8n de support client (multimodal)
 
-Site vitrine réalisé pour présenter un projet de voiture solaire autonome, avec une mise en page moderne, des sections détaillées et une navigation simple entre les différentes étapes du projet.
+Workflow **n8n** orienté “production” pour traiter automatiquement des requêtes support/litiges reçues sur **Telegram** (texte / photo / audio), enrichir le contexte client (Supabase), puis décider d’une action (**réponse automatique** ou **escalade**) via un LLM.
 
-## Aperçu
+## Ce que ce projet démontre (recrutement)
 
-Le site présente :
-- le contexte général du projet,
-- le brainstorming et la conception,
-- la fabrication et les fonctionnalités,
-- l’équipe du projet,
-- une section contact,
-- un chatbot de navigation et un mode sombre.
+- Orchestration n8n (routing, branches multimodales, merge, actions)
+- Intégration APIs (Telegram, Groq/OpenAI-compatible, OpenRouter, Supabase)
+- Traitement multimodal (Vision + transcription)
+- Conception d’un routeur IA (prompting, JSON strict, fallback robuste)
+- Logging / audit (tickets) et escalade (Slack / Gmail optionnels)
 
-## Contenu du dépôt
+## Architecture (résumé)
 
-- `index.html` : page d’accueil principale du site.
-- `accueil.html`, `projet.html`, `contexte.html`, `brainstorming.html`, `conception.html`, `fabrication.html`, `fonctionnalite.html`, `equipe.html`, `forum.html`, `contact.html`, `a-developper.html` : pages de contenu du projet.
-- `styles.css` : styles globaux du site.
-- `chatbot-kb.js` : logique du chatbot / aide à la navigation.
-- `photos/` : images et illustrations du projet.
+```mermaid
+flowchart LR
+	T[Telegram Trigger] --> N[Normalize Input]
+	N --> S1{Switch Type}
+	S1 -->|text| TXT[Set Unified Text]
+	S1 -->|photo| P1[Telegram getFile] --> P2[Download] --> V[Vision (OpenRouter)] --> VP[Parse]
+	S1 -->|audio| A1[Telegram getFile] --> A2[Download] --> TR[Transcription (Groq Whisper)] --> AP[Parse]
+	TXT --> DB[Supabase: Get client]
+	VP --> DB
+	AP --> DB
+	DB --> C[Build Context] --> LLM[Decision LLM (Groq)] --> PD[Parse Decision JSON]
+	PD --> S2{Switch Action}
+	S2 -->|auto_reply| R1[Telegram reply] --> LOG1[Supabase: ticket log]
+	S2 -->|escalate| SL[Slack alert] --> ACK[Telegram ack] --> LOG2[Supabase: ticket log]
+```
 
-## Points forts
+## Fichiers importants
 
-- Design responsive adapté au mobile et au desktop.
-- Sections claires pour raconter le projet étape par étape.
-- Navigation interne rapide.
-- Mode sombre pour une meilleure lisibilité.
-- Mise en avant des membres de l’équipe et des visuels du projet.
+- n8n/workflows/workflow.json : définition du workflow (sans secrets; utilise des variables d’environnement)
+- docs/workflow-setup.md : guide “pas à pas” des nœuds + configuration
+- docs/supabase-schema.sql : schéma SQL minimal (`clients`, `tickets`)
+- docs/screenshots/ : captures d’écran à déposer pour la vitrine GitHub
 
-## Technologies utilisées
+## Démarrage rapide
 
-- HTML5
-- CSS3
-- JavaScript
+1. Importer le workflow : dans n8n → **Import workflow** → importer le fichier n8n/workflows/workflow.json
+2. Renseigner les variables : partir de .env.example (ou credentials n8n)
+3. Créer les tables Supabase : exécuter docs/supabase-schema.sql
+4. Activer le trigger Telegram et tester (texte, photo, audio)
 
-## Lancer le projet
+## Sécurité
 
-1. Ouvrir `index.html` dans un navigateur.
-2. Ou utiliser une extension type Live Server dans VS Code pour recharger automatiquement la page.
+- Aucun token n’est commité : le workflow référence des variables (ex: `TELEGRAM_BOT_TOKEN`, `GROQ_API_KEY`, `OPENROUTER_API_KEY`).
+- Les logs `tickets` sont volontairement minimaux : adapte la rétention et l’anonymisation selon ton contexte.
 
-## Pour l’ajouter à un portfolio
+## Note
 
-Tu peux utiliser cette description dans ton portfolio :
-
-> Site vitrine réalisé pour présenter un projet de voiture solaire autonome. Le projet met en avant la conception mécanique, l’architecture énergétique, la perception embarquée et le travail d’équipe à travers une interface moderne et responsive.
-
-## Auteur
-
-Projet d’équipe réalisé pour la présentation d’une voiture solaire autonome.
+Ce dépôt contient aussi un site vitrine indépendant dans le dossier site/ (voir site/README.md).

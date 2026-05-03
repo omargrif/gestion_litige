@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "Gestion des Litiges - Support Bot Multimodale",
   "description": "Bot d'automatisation pour gestion clients multimodale (texte/photo/audio) avec routage IA intelligent",
   "nodes": [
@@ -10,7 +10,7 @@
     {
       "name": "Normalize Input",
       "type": "code",
-      "code": "const m = $json.message ?? {};\nconst photo = m.photo?.length ? m.photo[m.photo.length - 1] : null;\nconst audioObj = m.voice ?? m.audio ?? null;\n\nlet message_type = 'unknown';\nif (m.text) message_type = 'text';\nelse if (photo) message_type = 'photo';\nelse if (audioObj) message_type = 'audio';\n\nreturn [{\n  json: {\n    correlation_id: `${m.chat?.id || 'na'}-${m.message_id || Date.now()}`\n    chat_id: m.chat?.id,\n    username: m.from?.username ?? null,\n    message_id: m.message_id ?? null,\n    message_type,\n    text_input: m.text ?? null,\n    photo_file_id: photo?.file_id ?? null,\n    audio_file_id: audioObj?.file_id ?? null,\n    telegram_raw: m\n  }\n}];"
+      "code": "const m = $json.message ?? {};\nconst photo = m.photo?.length ? m.photo[m.photo.length - 1] : null;\nconst audioObj = m.voice ?? m.audio ?? null;\n\nlet message_type = 'unknown';\nif (m.text) message_type = 'text';\nelse if (photo) message_type = 'photo';\nelse if (audioObj) message_type = 'audio';\n\nreturn [{\n  json: {\n    correlation_id: `${m.chat?.id || 'na'}-${m.message_id || Date.now()}`,\n    chat_id: m.chat?.id,\n    username: m.from?.username ?? null,\n    message_id: m.message_id ?? null,\n    message_type,\n    text_input: m.text ?? null,\n    photo_file_id: photo?.file_id ?? null,\n    audio_file_id: audioObj?.file_id ?? null,\n    telegram_raw: m\n  }\n}];"
     },
     {
       "name": "Switch Type",
@@ -76,7 +76,7 @@
             "content": [
               {
                 "type": "text",
-                "text": "Analyse cette image de litige client et résume les faits observables en 5 lignes max."
+                "text": "Analyse cette image de litige client et r├®sume les faits observables en 5 lignes max."
               },
               {
                 "type": "image_url",
@@ -159,7 +159,7 @@
         "messages": [
           {
             "role": "system",
-            "content": "Tu es un routeur support/litiges. Réponds uniquement en JSON strict."
+            "content": "Tu es un routeur support/litiges. R├®ponds uniquement en JSON strict."
           },
           {
             "role": "user",
@@ -171,7 +171,7 @@
     {
       "name": "Parse Decision JSON",
       "type": "code",
-      "code": "const raw = $json.choices?.[0]?.message?.content ?? '{}';\nconst decision = JSON.parse(raw);\nreturn [{ json: { ...$json, ...decision } }];"
+      "code": "const raw = $json.choices?.[0]?.message?.content ?? '{}'; const extract=(t)=>{ if (typeof t !== 'string') return null; const s=t.indexOf('{'); const e=t.lastIndexOf('}'); return (s !== -1 && e !== -1 && e > s) ? t.slice(s, e + 1) : null; }; let decision=null; try { decision = JSON.parse(raw); } catch (e) { const candidate = extract(raw); if (candidate) { try { decision = JSON.parse(candidate); } catch (_) {} } } if (!decision || typeof decision !== 'object') { decision = { action: 'escalate', priority: 'medium', category: 'other', confidence: 0, reply: 'Votre demande nécessite une vérification humaine. Notre équipe vous répond rapidement.', reasoning_summary: 'Réponse du modèle non-JSON ou invalide.' }; } return [{ json: { ...$json, ...decision, decision_raw: raw } }];"
     },
     {
       "name": "Switch Action",
@@ -217,14 +217,14 @@
       "type": "slack",
       "operation": "post message",
       "channel": "#support-escalade",
-      "text": "🚨 Escalade {{$json.priority}} | {{$json.category}} | {{$json.reasoning_summary}}"
+      "text": "­ƒÜ¿ Escalade {{$json.priority}} | {{$json.category}} | {{$json.reasoning_summary}}"
     },
     {
       "name": "Telegram Ack Client",
       "type": "telegram",
       "operation": "Send Message",
       "chatId": "{{ $json.chat_id }}",
-      "text": "Votre demande nécessite une vérification humaine. Notre équipe vous répond rapidement."
+      "text": "Votre demande n├®cessite une v├®rification humaine. Notre ├®quipe vous r├®pond rapidement."
     },
     {
       "name": "Supabase Create Ticket (escalate)",

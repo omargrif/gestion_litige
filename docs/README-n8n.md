@@ -1,6 +1,6 @@
 # 🤖 Gestion des Litiges - Bot Support Multimodale avec n8n
 
-Bot d'automatisation intelligente pour la gestion des litiges clients via **Telegram**, avec support **texte**, **photos** et **audio**. Utilise un pipeline **RAG + LLM** pour router automatiquement ou escalader les demandes.
+Bot d'automatisation intelligente pour la gestion des litiges clients via **Telegram**, avec support **texte**, **photos** et **audio**. Utilise un pipeline **Contexte + LLM** pour router automatiquement ou escalader les demandes.
 
 ## 🎯 Vue d'ensemble
 
@@ -8,7 +8,7 @@ Ce workflow n8n offre une solution **end-to-end** de support client :
 - ✅ **Multimodale** : accepte texte, images et audio (transcrits en français)
 - ✅ **Vision IA** : analyse les photos de litiges avec GPT-4o
 - ✅ **Transcription** : convertit l'audio en texte via Whisper (Groq)
-- ✅ **Recherche contextuelle** : récupère l'historique client dans Supabase
+- ✅ **Contexte client** : récupère les infos client depuis Supabase
 - ✅ **Décision IA** : routeur intelligent avec LLM (Llama 3.3 / Groq)
 - ✅ **Actions adaptées** : réponse automatique OU escalade (Slack, Gmail)
 - ✅ **Audit** : chaque interaction est loggée dans Supabase
@@ -64,27 +64,29 @@ Avant d'importer le workflow, crée ces credentials dans n8n :
 
 Crée 2 tables dans Supabase :
 
-**Table `clients`** :
+Le schéma recommandé est dans `docs/supabase-schema.sql`.
+
+**Table `clients`** (extrait) :
 ```sql
 CREATE TABLE clients (
   id UUID PRIMARY KEY,
   telegram_chat_id BIGINT UNIQUE,
   name TEXT,
   email TEXT,
-  tier TEXT ('standard', 'premium'),
+    tier TEXT,
   created_at TIMESTAMP DEFAULT now()
 );
 ```
 
-**Table `tickets`** :
+**Table `tickets`** (extrait) :
 ```sql
 CREATE TABLE tickets (
   id UUID PRIMARY KEY,
   correlation_id TEXT,
   chat_id BIGINT,
   category TEXT,
-  priority TEXT ('low', 'medium', 'high', 'critical'),
-  action TEXT ('auto_reply', 'escalate'),
+    priority TEXT,
+    action TEXT,
   message TEXT,
   reply TEXT,
   reasoning_summary TEXT,
@@ -94,10 +96,12 @@ CREATE TABLE tickets (
 
 ### 3️⃣ Importer le Workflow
 
-1. Télécharge `workflow.json`
+1. Importe `n8n/workflows/workflow.json`
 2. Dans n8n → **Import Workflow** → colle le JSON
 3. Configure les credentials (cli-click sur chaque nœud HTTP)
 4. Active le **Telegram Trigger**
+
+Guide pas à pas: `docs/workflow-setup.md`
 
 ---
 
