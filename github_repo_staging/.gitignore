@@ -1,0 +1,43 @@
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# n8n
+.n8n
+node_modules/
+dist/
+build/
+
+# OS
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Logs
+*.log
+logs/
+
+# Sensitive data
+*.key
+*.pem
+secrets/
+credentials/
+
+# Temp files
+.tmp/
+temp/
+cache/
+
+# Mac
+._*
+.AppleDouble
+.LSOverride

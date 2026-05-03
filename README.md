@@ -18,7 +18,7 @@ Le site présente :
 - `accueil.html`, `projet.html`, `contexte.html`, `brainstorming.html`, `conception.html`, `fabrication.html`, `fonctionnalite.html`, `equipe.html`, `forum.html`, `contact.html`, `a-developper.html` : pages de contenu du projet.
 - `styles.css` : styles globaux du site.
 - `chatbot-kb.js` : logique du chatbot / aide à la navigation.
-- `photos_robotique/` : images et illustrations du projet.
+- `photos/` : images et illustrations du projet.
 
 ## Points forts
 
