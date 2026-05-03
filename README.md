@@ -42,6 +42,31 @@ flowchart LR
 3. Créer les tables Supabase : exécuter docs/supabase-schema.sql
 4. Activer le trigger Telegram et tester (texte, photo, audio)
 
+## Demo (à montrer en entretien)
+
+- Exemples anonymisés (inputs / décisions / actions): docs/demo-examples.md
+- Recommandation: enregistrer un GIF (30–45s) montrant un message texte + un vocal + une photo, et la création du ticket côté Supabase.
+
+## Screenshots
+
+Ajoute tes captures dans `docs/screenshots/` avec ces noms pour que GitHub les affiche automatiquement :
+
+- `workflow-overview.png`
+- `workflow-text-branch.png`
+- `workflow-photo-branch.png`
+- `workflow-audio-branch.png`
+- `supabase-tables.png`
+
+Puis décommente/active les images ci-dessous :
+
+<!--
+![Workflow overview](docs/screenshots/workflow-overview.png)
+![Text branch](docs/screenshots/workflow-text-branch.png)
+![Photo branch](docs/screenshots/workflow-photo-branch.png)
+![Audio branch](docs/screenshots/workflow-audio-branch.png)
+![Supabase tables](docs/screenshots/supabase-tables.png)
+-->
+
 ## Sécurité
 
 - Aucun token n’est commité : le workflow référence des variables (ex: `TELEGRAM_BOT_TOKEN`, `GROQ_API_KEY`, `OPENROUTER_API_KEY`).
