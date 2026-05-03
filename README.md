@@ -1,71 +1,70 @@
-# 🤖 Gestion des litiges — Workflow n8n de support client (multimodal)
+# Gestion des litiges — Workflow n8n de support client
 
-Workflow **n8n** orienté “production” pour traiter automatiquement des requêtes support/litiges reçues sur **Telegram** (texte / photo / audio), enrichir le contexte client (Supabase), puis décider d’une action (**réponse automatique** ou **escalade**) via un LLM.
+Ce dépôt contient un workflow n8n qui reçoit des demandes clients sur Telegram, les traite selon leur format, enrichit le contexte dans Supabase, puis choisit entre une réponse automatique et une escalade humaine.
 
-## Ce que ce projet démontre (recrutement)
+## Vue d’ensemble
 
-- Orchestration n8n (routing, branches multimodales, merge, actions)
-- Intégration APIs (Telegram, Groq/OpenAI-compatible, OpenRouter, Supabase)
-- Traitement multimodal (Vision + transcription)
-- Conception d’un routeur IA (prompting, JSON strict, fallback robuste)
-- Logging / audit (tickets) et escalade (Slack / Gmail optionnels)
+- Entrée principale via Telegram
+- Prise en charge du texte, de la photo et de l’audio
+- Lecture du contexte client dans Supabase
+- Décision finale confiée à un LLM avec sortie JSON stricte
+- Journalisation systématique des tickets et des escalades
 
-## Architecture (résumé)
+## Ce que le projet couvre
+
+- Orchestration n8n avec branches dédiées par type de message
+- Intégration de services externes via variables d’environnement
+- Traitement multimodal avec vision et transcription
+- Routage automatique entre réponse immédiate et traitement humain
+- Suivi simple des demandes pour garder une trace exploitable
+
+## Architecture
 
 ```mermaid
 flowchart LR
-	T[Telegram Trigger] --> N[Normalize Input]
-	N --> S1{Switch Type}
-	S1 -->|text| TXT[Set Unified Text]
-	S1 -->|photo| P1[Telegram getFile] --> P2[Download] --> V[Vision (OpenRouter)] --> VP[Parse]
-	S1 -->|audio| A1[Telegram getFile] --> A2[Download] --> TR[Transcription (Groq Whisper)] --> AP[Parse]
-	TXT --> DB[Supabase: Get client]
+	T[Réception Telegram] --> N[Préparer la demande]
+	N --> S1{Identifier le support}
+	S1 -->|texte| TXT[Message texte]
+	S1 -->|photo| P1[Récupérer média photo] --> P2[Télécharger la photo] --> V[Analyser la photo] --> VP[Structurer l’analyse photo]
+	S1 -->|audio| A1[Récupérer média audio] --> A2[Télécharger l’audio] --> TR[Transcrire l’audio] --> AP[Structurer la transcription]
+	TXT --> DB[Charger le dossier client]
 	VP --> DB
 	AP --> DB
-	DB --> C[Build Context] --> LLM[Decision LLM (Groq)] --> PD[Parse Decision JSON]
-	PD --> S2{Switch Action}
-	S2 -->|auto_reply| R1[Telegram reply] --> LOG1[Supabase: ticket log]
-	S2 -->|escalate| SL[Slack alert] --> ACK[Telegram ack] --> LOG2[Supabase: ticket log]
+	DB --> C[Préparer le contexte] --> LLM[Décider du traitement] --> PD[Structurer la décision]
+	PD --> S2{Choisir l’action}
+	S2 -->|auto_reply| R1[Répondre au client] --> LOG1[Journaliser la réponse]
+	S2 -->|escalate| SL[Alerte équipe] --> ACK[Accuser réception] --> LOG2[Journaliser l’escalade]
 ```
 
 ## Fichiers importants
 
-- n8n/workflows/workflow.json : définition du workflow (sans secrets; utilise des variables d’environnement)
-- docs/workflow-setup.md : guide “pas à pas” des nœuds + configuration
-- docs/supabase-schema.sql : schéma SQL minimal (`clients`, `tickets`)
-- docs/screenshots/ : captures d’écran à déposer pour la vitrine GitHub
+- [github_repo_staging/workflow.json](github_repo_staging/workflow.json) : définition du workflow sans secrets
+- [docs/workflow-setup.md](docs/workflow-setup.md) : guide de configuration pas à pas
+- [docs/supabase-schema.sql](docs/supabase-schema.sql) : schéma SQL minimal pour `clients` et `tickets`
+- [docs/screenshots/](docs/screenshots/) : diagrammes et captures pour la présentation
 
 ## Démarrage rapide
 
-1. Importer le workflow : dans n8n → **Import workflow** → importer le fichier n8n/workflows/workflow.json
-2. Renseigner les variables : partir de .env.example (ou credentials n8n)
-3. Créer les tables Supabase : exécuter docs/supabase-schema.sql
-4. Activer le trigger Telegram et tester (texte, photo, audio)
+1. Importer [github_repo_staging/workflow.json](github_repo_staging/workflow.json) dans n8n
+2. Renseigner les variables d’environnement dans les credentials ou dans `.env.example`
+3. Créer les tables Supabase avec [docs/supabase-schema.sql](docs/supabase-schema.sql)
+4. Tester le flux avec un message texte, une photo et un audio
 
-## Demo (à montrer en entretien)
+## Démonstration
 
-- Exemples anonymisés (inputs / décisions / actions): docs/demo-examples.md
-- Recommandation: enregistrer un GIF (30–45s) montrant un message texte + un vocal + une photo, et la création du ticket côté Supabase.
+- [docs/demo-examples.md](docs/demo-examples.md) présente des cas anonymisés
+- Un court GIF montrant la réception, la décision et la journalisation suffit pour la présentation
 
-## Screenshots
+## Diagrammes
 
-Des diagrammes SVG (propres) sont déjà fournis dans `docs/screenshots/`. Tu peux les remplacer par des captures n8n réelles si tu veux.
-
-Décommente/active les images ci-dessous :
-
-<!--
-![Workflow overview](docs/screenshots/workflow-overview.svg)
-![Text branch](docs/screenshots/workflow-text-branch.svg)
-![Photo branch](docs/screenshots/workflow-photo-branch.svg)
-![Audio branch](docs/screenshots/workflow-audio-branch.svg)
-![Supabase tables](docs/screenshots/supabase-tables.svg)
--->
+Des diagrammes SVG sont disponibles dans [docs/screenshots/](docs/screenshots/). Tu peux les garder tels quels ou les remplacer par des captures de ton propre workflow n8n.
 
 ## Sécurité
 
-- Aucun token n’est commité : le workflow référence des variables (ex: `TELEGRAM_BOT_TOKEN`, `GROQ_API_KEY`, `OPENROUTER_API_KEY`).
-- Les logs `tickets` sont volontairement minimaux : adapte la rétention et l’anonymisation selon ton contexte.
+- Aucun token sensible n’est stocké dans le dépôt
+- Le workflow s’appuie sur des variables comme `TELEGRAM_BOT_TOKEN`, `GROQ_API_KEY` et `OPENROUTER_API_KEY`
+- Les tickets enregistrés doivent rester aussi sobres que possible
 
-## Note
+## Remarque
 
-Ce dépôt contient aussi un site vitrine indépendant dans le dossier site/ (voir site/README.md).
+Ce dépôt est distinct du site vitrine du projet Auto, qui se trouve dans le dossier [site/](site/).
