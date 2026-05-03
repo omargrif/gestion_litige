@@ -1,0 +1,267 @@
+{
+  "name": "Gestion des litiges - assistant de support multimodal",
+  "description": "Automatisation n8n pour traiter les demandes clients envoyées sur Telegram (texte, photo, audio), enrichir le contexte et orienter la réponse",
+  "nodes": [
+    {
+      "name": "Réception Telegram",
+      "type": "telegram_trigger",
+      "updates": "message"
+    },
+    {
+      "name": "Préparer la demande",
+      "type": "code",
+      "code": "const m = $json.message ?? {};\nconst photo = m.photo?.length ? m.photo[m.photo.length - 1] : null;\nconst audioObj = m.voice ?? m.audio ?? null;\n\nlet message_type = 'unknown';\nif (m.text) message_type = 'text';\nelse if (photo) message_type = 'photo';\nelse if (audioObj) message_type = 'audio';\n\nreturn [{\n  json: {\n    correlation_id: `${m.chat?.id || 'na'}-${m.message_id || Date.now()}`,\n    chat_id: m.chat?.id,\n    username: m.from?.username ?? null,\n    message_id: m.message_id ?? null,\n    message_type,\n    text_input: m.text ?? null,\n    photo_file_id: photo?.file_id ?? null,\n    audio_file_id: audioObj?.file_id ?? null,\n    telegram_raw: m\n  }\n}];"
+    },
+    {
+      "name": "Identifier le support",
+      "type": "switch",
+      "mode": "Rules",
+      "rules": [
+        {
+          "condition": "{{ $json.message_type }}",
+          "operator": "equals",
+          "value": "text"
+        },
+        {
+          "condition": "{{ $json.message_type }}",
+          "operator": "equals",
+          "value": "photo"
+        },
+        {
+          "condition": "{{ $json.message_type }}",
+          "operator": "equals",
+          "value": "audio"
+        }
+      ]
+    },
+    {
+      "name": "Message texte",
+      "type": "set",
+      "fields": {
+        "content": "{{ $json.text_input }}",
+        "source_modality": "text"
+      }
+    },
+    {
+      "name": "Récupérer média photo",
+      "type": "http_request",
+      "method": "GET",
+      "url": "https://api.telegram.org/bot{{$env.TELEGRAM_BOT_TOKEN}}/getFile",
+      "queryParams": {
+        "file_id": "{{ $json.photo_file_id }}"
+      }
+    },
+    {
+      "name": "Télécharger la photo",
+      "type": "http_request",
+      "method": "GET",
+      "url": "https://api.telegram.org/file/bot{{$env.TELEGRAM_BOT_TOKEN}}/{{ $json.result.file_path }}",
+      "responseFormat": "File",
+      "binaryProperty": "data"
+    },
+    {
+      "name": "Analyser la photo",
+      "type": "http_request",
+      "method": "POST",
+      "url": "https://openrouter.ai/api/v1/chat/completions",
+      "headers": {
+        "Authorization": "Bearer {{$env.OPENROUTER_API_KEY}}",
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "model": "openai/gpt-4o-mini",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Analyse cette image de litige client et résume les faits observables en 5 lignes max."
+              },
+              {
+                "type": "image_url",
+                "image_url": {
+                  "url": "{{ 'data:image/jpeg;base64,' + $binary.data.data }}"
+                }
+              }
+            ]
+          }
+        ],
+        "temperature": 0.1
+      }
+    },
+    {
+      "name": "Structurer l’analyse photo",
+      "type": "code",
+      "code": "const content = $json.choices?.[0]?.message?.content ?? '';\nreturn [{ json: { ...$json, content, source_modality: 'photo' } }];"
+    },
+    {
+      "name": "Récupérer média audio",
+      "type": "http_request",
+      "method": "GET",
+      "url": "https://api.telegram.org/bot{{$env.TELEGRAM_BOT_TOKEN}}/getFile",
+      "queryParams": {
+        "file_id": "{{ $json.audio_file_id }}"
+      }
+    },
+    {
+      "name": "Télécharger l’audio",
+      "type": "http_request",
+      "method": "GET",
+      "url": "https://api.telegram.org/file/bot{{$env.TELEGRAM_BOT_TOKEN}}/{{ $json.result.file_path }}",
+      "responseFormat": "File",
+      "binaryProperty": "data"
+    },
+    {
+      "name": "Transcrire l’audio",
+      "type": "http_request",
+      "method": "POST",
+      "url": "https://api.groq.com/openai/v1/audio/transcriptions",
+      "headers": {
+        "Authorization": "Bearer {{$env.GROQ_API_KEY}}"
+      },
+      "bodyContentType": "FormData",
+      "fields": {
+        "model": "whisper-large-v3",
+        "language": "fr",
+        "file": "{{ $binary.data }}"
+      }
+    },
+    {
+      "name": "Structurer la transcription",
+      "type": "code",
+      "code": "return [{\n  json: {\n    ...$json,\n    content: $json.text ?? '',\n    source_modality: 'audio'\n  }\n}];"
+    },
+    {
+      "name": "Charger le dossier client",
+      "type": "supabase",
+      "operation": "Get many",
+      "table": "clients",
+      "filter": "telegram_chat_id = {{ $json.chat_id }}"
+    },
+    {
+      "name": "Préparer le contexte",
+      "type": "code",
+      "code": "const client = Array.isArray($json.data) ? $json.data[0] : $json;\nreturn [{\n  json: {\n    ...$json,\n    client_name: client?.name ?? 'Client inconnu',\n    client_email: client?.email ?? null,\n    client_tier: client?.tier ?? 'standard'\n  }\n}];"
+    },
+    {
+      "name": "Décider du traitement",
+      "type": "http_request",
+      "method": "POST",
+      "url": "https://api.groq.com/openai/v1/chat/completions",
+      "headers": {
+        "Authorization": "Bearer {{$env.GROQ_API_KEY}}",
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "model": "llama-3.3-70b-versatile",
+        "temperature": 0.1,
+        "messages": [
+          {
+            "role": "system",
+            "content": "Tu es un routeur support/litiges. Réponds uniquement en JSON strict."
+          },
+          {
+            "role": "user",
+            "content": "Contexte client: {{ $json.client_name }} (tier={{$json.client_tier}})\\nMessage: {{ $json.content }}\\nRetourne JSON: {\\\"action\\\":\\\"auto_reply|escalate\\\",\\\"priority\\\":\\\"low|medium|high|critical\\\",\\\"category\\\":\\\"billing|delivery|quality|other\\\",\\\"confidence\\\":0-1,\\\"reply\\\":\\\"...\\\",\\\"reasoning_summary\\\":\\\"...\\\"}"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Structurer la décision",
+      "type": "code",
+      "code": "const raw = $json.choices?.[0]?.message?.content ?? '{}';\nconst decision = JSON.parse(raw);\nreturn [{ json: { ...$json, ...decision } }];"
+    },
+    {
+      "name": "Choisir l’action",
+      "type": "switch",
+      "mode": "Rules",
+      "rules": [
+        {
+          "condition": "{{ $json.action }}",
+          "operator": "equals",
+          "value": "auto_reply"
+        },
+        {
+          "condition": "{{ $json.action }}",
+          "operator": "equals",
+          "value": "escalate"
+        }
+      ]
+    },
+    {
+      "name": "Répondre au client",
+      "type": "telegram",
+      "operation": "Send Message",
+      "chatId": "{{ $json.chat_id }}",
+      "text": "{{ $json.reply }}"
+    },
+    {
+      "name": "Journaliser la réponse",
+      "type": "supabase",
+      "operation": "Create",
+      "table": "tickets",
+      "fields": {
+        "correlation_id": "{{ $json.correlation_id }}",
+        "chat_id": "{{ $json.chat_id }}",
+        "category": "{{ $json.category }}",
+        "priority": "{{ $json.priority }}",
+        "action": "auto_reply",
+        "message": "{{ $json.content }}",
+        "reply": "{{ $json.reply }}"
+      }
+    },
+    {
+      "name": "Alerte équipe",
+      "type": "slack",
+      "operation": "post message",
+      "channel": "#support-escalade",
+      "text": "🚨 Escalade {{$json.priority}} | {{$json.category}} | {{$json.reasoning_summary}}"
+    },
+    {
+      "name": "Accuser réception",
+      "type": "telegram",
+      "operation": "Send Message",
+      "chatId": "{{ $json.chat_id }}",
+      "text": "Votre demande nécessite une vérification humaine. Notre équipe vous répond rapidement."
+    },
+    {
+      "name": "Journaliser l’escalade",
+      "type": "supabase",
+      "operation": "Create",
+      "table": "tickets",
+      "fields": {
+        "correlation_id": "{{ $json.correlation_id }}",
+        "chat_id": "{{ $json.chat_id }}",
+        "category": "{{ $json.category }}",
+        "priority": "{{ $json.priority }}",
+        "action": "escalate",
+        "message": "{{ $json.content }}",
+        "reasoning_summary": "{{ $json.reasoning_summary }}"
+      }
+    }
+  ],
+  "connections": {
+    "Réception Telegram": ["Préparer la demande"],
+    "Préparer la demande": ["Identifier le support"],
+    "Identifier le support": ["Message texte", "Récupérer média photo", "Récupérer média audio"],
+    "Message texte": ["Charger le dossier client"],
+    "Récupérer média photo": ["Télécharger la photo"],
+    "Télécharger la photo": ["Analyser la photo"],
+    "Analyser la photo": ["Structurer l’analyse photo"],
+    "Structurer l’analyse photo": ["Charger le dossier client"],
+    "Récupérer média audio": ["Télécharger l’audio"],
+    "Télécharger l’audio": ["Transcrire l’audio"],
+    "Transcrire l’audio": ["Structurer la transcription"],
+    "Structurer la transcription": ["Charger le dossier client"],
+    "Charger le dossier client": ["Préparer le contexte"],
+    "Préparer le contexte": ["Décider du traitement"],
+    "Décider du traitement": ["Structurer la décision"],
+    "Structurer la décision": ["Choisir l’action"],
+    "Choisir l’action": [
+      ["Répondre au client", "Journaliser la réponse"],
+      ["Alerte équipe", "Accuser réception", "Journaliser l’escalade"]
+    ]
+  }
+}
