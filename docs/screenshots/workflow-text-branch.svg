@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="260" viewBox="0 0 1200 260" role="img" aria-label="Text branch">
+  <defs>
+    <style>
+      .bg { fill: #0b1020; }
+      .title { font: 700 18px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial; fill: #e5e7eb; }
+      .node { fill: #111827; stroke: #334155; stroke-width: 1.2; }
+      .label { font: 650 14px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial; fill: #e5e7eb; }
+      .small { font: 500 12px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial; fill: #cbd5e1; }
+      .edge { stroke: #64748b; stroke-width: 1.6; fill: none; marker-end: url(#arrow); }
+      .badge { fill: #1d4ed8; }
+      .badgeText { font: 700 11px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial; fill: #fff; }
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#64748b"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1200" height="260" rx="18"/>
+  <text class="title" x="28" y="44">Branche TEXTE</text>
+
+  <g>
+    <rect class="node" x="60" y="110" width="210" height="60" rx="12"/>
+    <rect class="badge" x="72" y="122" width="46" height="20" rx="10"/>
+    <text class="badgeText" x="83" y="137">TEXT</text>
+    <text class="label" x="126" y="138">Unified Text</text>
+    <text class="small" x="126" y="158">content = text_input</text>
+  </g>
+
+  <g>
+    <rect class="node" x="320" y="110" width="210" height="60" rx="12"/>
+    <text class="label" x="340" y="138">Supabase</text>
+    <text class="small" x="340" y="158">Get client (by chat_id)</text>
+  </g>
+
+  <g>
+    <rect class="node" x="580" y="110" width="210" height="60" rx="12"/>
+    <text class="label" x="600" y="138">Decision LLM</text>
+    <text class="small" x="600" y="158">JSON strict (action)</text>
+  </g>
+
+  <g>
+    <rect class="node" x="840" y="110" width="300" height="60" rx="12"/>
+    <text class="label" x="860" y="138">Switch Action</text>
+    <text class="small" x="860" y="158">auto_reply → Telegram + log | escalate → Slack + ack + log</text>
+  </g>
+
+  <path class="edge" d="M270 140 L320 140"/>
+  <path class="edge" d="M530 140 L580 140"/>
+  <path class="edge" d="M790 140 L840 140"/>
+</svg>

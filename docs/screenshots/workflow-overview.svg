@@ -1,0 +1,123 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="520" viewBox="0 0 1400 520" role="img" aria-label="Workflow overview">
+  <defs>
+    <style>
+      .bg { fill: #0b1020; }
+      .title { font: 700 20px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial; fill: #e5e7eb; }
+      .sub { font: 500 12px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial; fill: #9ca3af; }
+      .node { fill: #111827; stroke: #334155; stroke-width: 1.2; }
+      .node2 { fill: #0f172a; stroke: #334155; stroke-width: 1.2; }
+      .label { font: 650 14px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial; fill: #e5e7eb; }
+      .small { font: 500 12px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial; fill: #cbd5e1; }
+      .edge { stroke: #64748b; stroke-width: 1.6; fill: none; marker-end: url(#arrow); }
+      .lane { fill: none; stroke: #1f2937; stroke-width: 1; stroke-dasharray: 6 6; }
+      .badge { fill: #1d4ed8; }
+      .badge2 { fill: #059669; }
+      .badge3 { fill: #a855f7; }
+      .badgeText { font: 700 11px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial; fill: #ffffff; }
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#64748b"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1400" height="520" rx="18"/>
+  <text class="title" x="32" y="44">Gestion des litiges — Workflow n8n (vue d’ensemble)</text>
+  <text class="sub" x="32" y="68">Telegram (texte/photo/audio) → normalisation → contexte Supabase → décision LLM → actions (auto-reply / escalade)</text>
+
+  <!-- lanes -->
+  <rect class="lane" x="30" y="110" width="1340" height="120" rx="14"/>
+  <rect class="lane" x="30" y="250" width="1340" height="120" rx="14"/>
+  <rect class="lane" x="30" y="390" width="1340" height="90" rx="14"/>
+  <text class="sub" x="48" y="132">Entrée & multimodal</text>
+  <text class="sub" x="48" y="272">Contexte & décision IA</text>
+  <text class="sub" x="48" y="412">Actions & audit</text>
+
+  <!-- main nodes -->
+  <g>
+    <rect class="node" x="60" y="150" width="190" height="56" rx="12"/>
+    <text class="label" x="78" y="174">Telegram Trigger</text>
+    <text class="small" x="78" y="194">updates: message</text>
+  </g>
+  <g>
+    <rect class="node" x="280" y="150" width="220" height="56" rx="12"/>
+    <text class="label" x="300" y="174">Normalize Input</text>
+    <text class="small" x="300" y="194">type + champs unifiés</text>
+  </g>
+  <g>
+    <rect class="node" x="530" y="150" width="200" height="56" rx="12"/>
+    <text class="label" x="550" y="174">Switch Type</text>
+    <text class="small" x="550" y="194">text / photo / audio</text>
+  </g>
+
+  <!-- branch nodes -->
+  <g>
+    <rect class="node2" x="770" y="118" width="170" height="44" rx="12"/>
+    <rect class="badge" x="780" y="126" width="46" height="20" rx="10"/>
+    <text class="badgeText" x="791" y="141">TEXT</text>
+    <text class="label" x="836" y="144">Unified Text</text>
+  </g>
+  <g>
+    <rect class="node2" x="770" y="168" width="170" height="44" rx="12"/>
+    <rect class="badge2" x="780" y="176" width="56" height="20" rx="10"/>
+    <text class="badgeText" x="792" y="191">PHOTO</text>
+    <text class="label" x="844" y="194">Vision</text>
+  </g>
+  <g>
+    <rect class="node2" x="770" y="218" width="170" height="44" rx="12"/>
+    <rect class="badge3" x="780" y="226" width="56" height="20" rx="10"/>
+    <text class="badgeText" x="792" y="241">AUDIO</text>
+    <text class="label" x="842" y="244">Whisper</text>
+  </g>
+
+  <!-- context + decision -->
+  <g>
+    <rect class="node" x="980" y="290" width="190" height="56" rx="12"/>
+    <text class="label" x="1000" y="314">Supabase</text>
+    <text class="small" x="1000" y="334">clients lookup</text>
+  </g>
+  <g>
+    <rect class="node" x="1200" y="290" width="170" height="56" rx="12"/>
+    <text class="label" x="1220" y="314">Decision LLM</text>
+    <text class="small" x="1220" y="334">JSON strict</text>
+  </g>
+
+  <!-- actions -->
+  <g>
+    <rect class="node2" x="880" y="420" width="160" height="56" rx="12"/>
+    <text class="label" x="900" y="444">Auto-reply</text>
+    <text class="small" x="900" y="464">Telegram + log</text>
+  </g>
+  <g>
+    <rect class="node2" x="1060" y="420" width="170" height="56" rx="12"/>
+    <text class="label" x="1080" y="444">Escalate</text>
+    <text class="small" x="1080" y="464">Slack + ack + log</text>
+  </g>
+  <g>
+    <rect class="node" x="1250" y="420" width="120" height="56" rx="12"/>
+    <text class="label" x="1270" y="444">Tickets</text>
+    <text class="small" x="1270" y="464">audit Supabase</text>
+  </g>
+
+  <!-- edges -->
+  <path class="edge" d="M250 178 L280 178"/>
+  <path class="edge" d="M500 178 L530 178"/>
+
+  <path class="edge" d="M730 178 L770 140"/>
+  <path class="edge" d="M730 178 L770 190"/>
+  <path class="edge" d="M730 178 L770 240"/>
+
+  <!-- merge to supabase -->
+  <path class="edge" d="M940 140 C 980 140, 980 270, 980 318"/>
+  <path class="edge" d="M940 190 C 980 190, 980 270, 980 318"/>
+  <path class="edge" d="M940 240 C 980 240, 980 270, 980 318"/>
+
+  <path class="edge" d="M1170 318 L1200 318"/>
+
+  <!-- decision to actions -->
+  <path class="edge" d="M1285 346 C 1285 380, 980 380, 960 420"/>
+  <path class="edge" d="M1285 346 C 1285 380, 1145 380, 1145 420"/>
+
+  <!-- actions to tickets -->
+  <path class="edge" d="M1040 448 L1250 448"/>
+  <path class="edge" d="M1230 448 L1250 448"/>
+</svg>

@@ -1,12 +1,27 @@
-# 📸 Captures d'écran du Workflow n8n
+# 📸 Screenshots / diagrammes
 
-Dépose tes images ici :
+Ce dossier contient des **diagrammes SVG** prêts à être affichés dans le README :
 
-1. **workflow-overview.png** - Vue d'ensemble du workflow (Telegram Trigger → Switches → Outputs)
-2. **workflow-text-branch.png** - Branche TEXTE détaillée
-3. **workflow-photo-branch.png** - Branche PHOTO (Vision OpenRouter)
-4. **workflow-audio-branch.png** - Branche AUDIO (Transcription Groq)
-5. **supabase-tables.png** - Schéma des tables `clients` et `tickets`
-6. **telegram-bot-demo.gif** - GIF de démonstration (optionnel)
+- `workflow-overview.svg`
+- `workflow-text-branch.svg`
+- `workflow-photo-branch.svg`
+- `workflow-audio-branch.svg`
+- `supabase-tables.svg`
 
-Les images seront référencées dans le README.md
+## Remplacer par des captures n8n (optionnel)
+
+Si tu veux des captures réelles :
+
+1. Fais des screenshots dans n8n (overview + branches)
+2. Dépose-les ici (PNG recommandé)
+3. Mets à jour les liens dans le README (ou garde les SVG)
+
+Suggestion de noms si tu utilises des PNG :
+
+- `workflow-overview.png`
+- `workflow-text-branch.png`
+- `workflow-photo-branch.png`
+- `workflow-audio-branch.png`
+- `supabase-tables.png`
+
+Les images sont référencées depuis [README.md](../../README.md).

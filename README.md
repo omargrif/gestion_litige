@@ -49,22 +49,16 @@ flowchart LR
 
 ## Screenshots
 
-Ajoute tes captures dans `docs/screenshots/` avec ces noms pour que GitHub les affiche automatiquement :
+Des diagrammes SVG (propres) sont déjà fournis dans `docs/screenshots/`. Tu peux les remplacer par des captures n8n réelles si tu veux.
 
-- `workflow-overview.png`
-- `workflow-text-branch.png`
-- `workflow-photo-branch.png`
-- `workflow-audio-branch.png`
-- `supabase-tables.png`
-
-Puis décommente/active les images ci-dessous :
+Décommente/active les images ci-dessous :
 
 <!--
-![Workflow overview](docs/screenshots/workflow-overview.png)
-![Text branch](docs/screenshots/workflow-text-branch.png)
-![Photo branch](docs/screenshots/workflow-photo-branch.png)
-![Audio branch](docs/screenshots/workflow-audio-branch.png)
-![Supabase tables](docs/screenshots/supabase-tables.png)
+![Workflow overview](docs/screenshots/workflow-overview.svg)
+![Text branch](docs/screenshots/workflow-text-branch.svg)
+![Photo branch](docs/screenshots/workflow-photo-branch.svg)
+![Audio branch](docs/screenshots/workflow-audio-branch.svg)
+![Supabase tables](docs/screenshots/supabase-tables.svg)
 -->
 
 ## Sécurité
